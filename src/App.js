@@ -10,17 +10,10 @@ class App extends Component {
     fetch('http://localhost:8888/football/live').then(res => {
       return res.json()
     }).then(res => {
+      console.log(res)
       this.setState({
         events: res.events
       })
-    })
-  }
-
-  showPrimaryMarket = (id) => {
-    fetch(`http://localhost:8888/sportsbook/event/${id}`).then(res => {
-      return res.json()
-    }).then(res => {
-      console.log(res)
     })
   }
 
@@ -28,10 +21,17 @@ class App extends Component {
     return (
       <div className="App">
         <h1 className="App-title">Sky Bet</h1>
-        {this.state.events.map(event => {
+        {this.state.events.map((event, index) => {
           return (
             <div key={event.name}>
-              <p onClick={ () => this.showPrimaryMarket(event.eventId) }>{event.name}</p>
+              {
+                index != 0 && this.state.events[index].typeName != this.state.events[index - 1].typeName && (
+                  <h1>{event.typeName}</h1>
+                )
+              }
+              { index == 0 && <h1>{event.typeName}</h1> }
+              <p>{event.name}</p>
+              
             </div>
           )
         })}
@@ -39,5 +39,6 @@ class App extends Component {
     );
   }
 }
+
 
 export default App;
