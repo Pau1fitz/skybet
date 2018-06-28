@@ -12,6 +12,7 @@ injectGlobal`
 
   body, p {
     margin: 0;
+    font-family: 'Josefin Sans', sans-serif;
   }
 `;
 

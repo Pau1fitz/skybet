@@ -42,7 +42,7 @@ class Event extends Component {
     return (
       <div onClick={ this.toggleExpand }>
         <Time>{moment(event.startTime).format('HH:mm')}</Time>
-        <p onClick={() => this.showPrimaryMarket(event.eventId)} >{event.name}</p>
+        <EventName onClick={() => this.showPrimaryMarket(event.eventId)} >{event.name}</EventName>
   
         <OddsContainer expanded={this.state.expanded}>
           <p>WIN { homePrice }</p>
@@ -58,6 +58,12 @@ class Event extends Component {
 const Time = styled.p`
   margin-right: 1em;
   font-weight: 800;
+  padding: 10px;
+`
+const EventName = styled.p`
+  padding: 0 10px;
+  cursor: pointer;
+  user-select: none;
 `
 const OddsContainer = styled.div`
   display: flex;
@@ -68,13 +74,12 @@ const OddsContainer = styled.div`
   transition: all 0.2s;
   ${ props => props.expanded && css`
     transform: scaleY(1);
-    padding: 10px 0;
+    padding: 15px 0;
   `};
 
   p {
     margin: 0 10px;
   }
-
 `
 
 export default Event;
