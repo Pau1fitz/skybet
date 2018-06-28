@@ -1,4 +1,6 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
+import styled from 'styled-components'
+import Event from './Event'
 
 class App extends Component {
 
@@ -10,7 +12,6 @@ class App extends Component {
     fetch('http://localhost:8888/football/live').then(res => {
       return res.json()
     }).then(res => {
-      console.log(res)
       this.setState({
         events: res.events
       })
@@ -19,26 +20,34 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App">
-        <h1 className="App-title">Sky Bet</h1>
+      <div>
         {this.state.events.map((event, index) => {
           return (
             <div key={event.name}>
               {
-                index != 0 && this.state.events[index].typeName != this.state.events[index - 1].typeName && (
-                  <h1>{event.typeName}</h1>
+                index !== 0 && this.state.events[index].typeName !== this.state.events[index - 1].typeName && (
+                  <HeaderText>{event.typeName}</HeaderText>
                 )
               }
-              { index == 0 && <h1>{event.typeName}</h1> }
-              <p>{event.name}</p>
-              
+              { index === 0 && <HeaderText>{event.typeName}</HeaderText> }
+              <EventContainer>
+                <Event event={event} />
+              </EventContainer>
             </div>
           )
         })}
       </div>
-    );
+    )
   }
 }
 
+const EventContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  border-bottom: 1px solid #eee;
+`
+const HeaderText = styled.h1`
+  font-size: 16px;
+`
 
-export default App;
+export default App
