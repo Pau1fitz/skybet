@@ -20,7 +20,7 @@ class App extends Component {
 
   render() {
     return (
-      <div>
+      <AppContainer>
         {this.state.events.map((event, index) => {
           return (
             <div key={event.name}>
@@ -36,10 +36,15 @@ class App extends Component {
             </div>
           )
         })}
-      </div>
+      </AppContainer>
     )
   }
 }
+
+const AppContainer = styled.div`
+  max-width: 1200px;
+  margin: 0 auto;
+`
 
 const EventContainer = styled.div`
   display: flex;

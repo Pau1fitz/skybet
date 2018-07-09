@@ -5,13 +5,12 @@ import styled, { css } from 'styled-components'
 class Event extends Component {
 
   state = {
-    homePrice: '',
-    awayPrice: '',
-    drawPrice: '',
-    expanded: false
+    expanded: false,
+    decimalView: true
   }
 
   showPrimaryMarket = (eventId) => {
+    this.toggleExpand();
     fetch(`http://localhost:8888/sportsbook/event/${eventId}`).then(res => {
       return res.json()
     }).then(res => {
@@ -20,11 +19,14 @@ class Event extends Component {
         return res.json()
       }).then(res => {
         const outcomes = Object.values(res.outcomes)[0]
-        console.log('outcomes ===> ', outcomes)
+        
         this.setState({
-          homePrice: parseFloat(outcomes[0].price.decimal).toFixed(3),
-          drawPrice: parseFloat(outcomes[1].price.decimal).toFixed(3),
-          awayPrice: parseFloat(outcomes[2].price.decimal).toFixed(3)
+          homePriceDecimal: parseFloat(outcomes[0].price.decimal).toFixed(2),
+          drawPriceDecimal: parseFloat(outcomes[1].price.decimal).toFixed(2),
+          awayPriceDecimal: parseFloat(outcomes[2].price.decimal).toFixed(2),
+          homePriceFraction: `${outcomes[0].price.num}/${outcomes[0].price.den}`,
+          drawPriceFraction: `${outcomes[1].price.num}/${outcomes[1].price.den}`,
+          awayPriceFraction: `${outcomes[2].price.num}/${outcomes[2].price.den}`
         })
       })
     })
@@ -36,19 +38,34 @@ class Event extends Component {
     })
   }
 
+  toggleDecimal = () => {
+    this.setState({
+      decimalView: !this.state.decimalView
+    })
+  }
+
   render() {
 
     const { event } = this.props;
-    const { homePrice, drawPrice, awayPrice } = this.state
+    const { 
+      homePriceDecimal,
+      drawPriceDecimal,
+      awayPriceDecimal,
+      homePriceFraction,
+      drawPriceFraction,
+      awayPriceFraction,
+      decimalView 
+    } = this.state
     return (
-      <div onClick={ this.toggleExpand }>
+      <div>
         <Time>{moment(event.startTime).format('HH:mm')}</Time>
         <EventName onClick={() => this.showPrimaryMarket(event.eventId)} >{event.name}</EventName>
   
         <OddsContainer expanded={this.state.expanded}>
-          <p>WIN { homePrice }</p>
-          <p>DRAW { drawPrice }</p>
-          <p>WIN { awayPrice }</p>
+          <p>WIN { decimalView ? homePriceDecimal : homePriceFraction }</p>
+          <p>DRAW { decimalView ? drawPriceDecimal : drawPriceFraction }</p>
+          <p>WIN { decimalView ? awayPriceDecimal : awayPriceFraction }</p>
+          <Icon onClick={ this.toggleDecimal } className="fas fa-exchange-alt"></Icon>
         </OddsContainer>
   
       </div>
@@ -60,6 +77,7 @@ const Time = styled.p`
   margin-right: 1em;
   font-weight: 800;
   padding: 10px;
+  color: #aaa;
 `
 const EventName = styled.p`
   padding: 0 10px;
@@ -76,11 +94,12 @@ const OddsContainer = styled.div`
   ${ props => props.expanded && css`
     transform: scaleY(1);
     padding: 15px 0;
-  `};
-
+  `}
   p {
     margin: 0 10px;
   }
 `
-
-export default Event;
+const Icon = styled.i`
+  cursor: pointer;
+`
+export default Event
