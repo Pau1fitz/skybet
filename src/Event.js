@@ -20,10 +20,11 @@ class Event extends Component {
         return res.json()
       }).then(res => {
         const outcomes = Object.values(res.outcomes)[0]
+        console.log('outcomes ===> ', outcomes)
         this.setState({
-          homePrice: outcomes[0].price.decimal,
-          drawPrice: outcomes[1].price.decimal,
-          awayPrice: outcomes[2].price.decimal
+          homePrice: parseFloat(outcomes[0].price.decimal).toFixed(3),
+          drawPrice: parseFloat(outcomes[1].price.decimal).toFixed(3),
+          awayPrice: parseFloat(outcomes[2].price.decimal).toFixed(3)
         })
       })
     })
